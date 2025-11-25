@@ -20,6 +20,24 @@ When browsing x.com or twitter.com, you'll see an "Apply in Cursor" link next to
 
 Clicking the link opens Cursor with the tweet text pre-filled as a prompt.
 
+### Thread Support
+
+When viewing a tweet that's part of a thread, the extension automatically includes parent tweets for context:
+
+```
+--- Thread Context ---
+
+[1] First tweet in the thread...
+
+[2] Second tweet in the thread...
+
+--- Current Tweet ---
+
+The tweet you clicked on...
+```
+
+Hover over the link to see how many parent tweets will be included.
+
 ## How it Works
 
 The extension uses [Cursor deep links](https://docs.cursor.com/context/deep-links) to pass tweet content directly to Cursor:

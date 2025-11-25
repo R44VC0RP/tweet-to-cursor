@@ -9,8 +9,49 @@
     return textElement.textContent.trim();
   }
 
-  function createCursorLink(tweetText) {
-    const encodedText = encodeURIComponent(tweetText);
+  function getThreadContext(tweetElement) {
+    // Collect all tweets in the thread above this one
+    const threadTweets = [];
+
+    // Get the cell/container that holds this tweet
+    const cellInnerDiv = tweetElement.closest('[data-testid="cellInnerDiv"]');
+    if (!cellInnerDiv) return [];
+
+    // Look for previous sibling cells that are part of the thread
+    let prevCell = cellInnerDiv.previousElementSibling;
+    while (prevCell) {
+      const prevTweet = prevCell.querySelector('article[data-testid="tweet"]');
+      if (prevTweet) {
+        const text = getTweetText(prevTweet);
+        if (text) {
+          threadTweets.unshift(text); // Add to beginning to maintain order
+        }
+      }
+      prevCell = prevCell.previousElementSibling;
+    }
+
+    return threadTweets;
+  }
+
+  function formatThreadContent(threadContext, currentTweetText) {
+    if (threadContext.length === 0) {
+      return currentTweetText;
+    }
+
+    // Format as a thread with clear separation
+    let content = '--- Thread Context ---\n\n';
+    threadContext.forEach((text, index) => {
+      content += `[${index + 1}] ${text}\n\n`;
+    });
+    content += '--- Current Tweet ---\n\n';
+    content += currentTweetText;
+
+    return content;
+  }
+
+  function createCursorLink(tweetText, threadContext = []) {
+    const fullContent = formatThreadContent(threadContext, tweetText);
+    const encodedText = encodeURIComponent(fullContent);
     const deepLink = `cursor://anysphere.cursor-deeplink/prompt?text=${encodedText}`;
 
     const separator = document.createElement('span');
@@ -21,7 +62,9 @@
     link.href = deepLink;
     link.className = 'cursor-link';
     link.textContent = 'Apply in Cursor';
-    link.title = 'Open this tweet in Cursor';
+    link.title = threadContext.length > 0
+      ? `Open this tweet with ${threadContext.length} parent tweet(s) in Cursor`
+      : 'Open this tweet in Cursor';
 
     const container = document.createElement('span');
     container.className = 'cursor-link-container';
@@ -66,19 +109,22 @@
       return;
     }
 
+    // Get thread context (parent tweets)
+    const threadContext = getThreadContext(tweetElement);
+
     const dateViewsRow = findDateViewsRow(tweetElement);
     if (!dateViewsRow) {
       // Fallback: try to inject after the views count
       const viewsSpan = tweetElement.querySelector('span[class*="r-1cwl3u0"]');
       if (viewsSpan && viewsSpan.textContent.includes('View')) {
-        const cursorLink = createCursorLink(tweetText);
+        const cursorLink = createCursorLink(tweetText, threadContext);
         viewsSpan.parentElement.appendChild(cursorLink);
         tweetElement.setAttribute(PROCESSED_ATTR, 'true');
       }
       return;
     }
 
-    const cursorLink = createCursorLink(tweetText);
+    const cursorLink = createCursorLink(tweetText, threadContext);
     dateViewsRow.appendChild(cursorLink);
     tweetElement.setAttribute(PROCESSED_ATTR, 'true');
   }
