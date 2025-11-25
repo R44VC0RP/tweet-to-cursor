@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Tweet to Cursor",
+  "version": "1.0.0",
+  "description": "Add 'Apply in Cursor' links to tweets on X/Twitter",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*", "https://twitter.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

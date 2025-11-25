@@ -1,0 +1,20 @@
+.cursor-link-container {
+  display: inline;
+}
+
+.cursor-link-separator {
+  color: rgb(113, 118, 123);
+}
+
+.cursor-link {
+  color: rgb(113, 118, 123);
+  text-decoration: none;
+  font-size: inherit;
+  font-family: inherit;
+  transition: color 0.2s ease;
+}
+
+.cursor-link:hover {
+  color: rgb(29, 155, 240);
+  text-decoration: underline;
+}
