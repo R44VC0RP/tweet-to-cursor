@@ -61,10 +61,10 @@
     const link = document.createElement('a');
     link.href = deepLink;
     link.className = 'cursor-link';
-    link.textContent = 'Apply in Cursor';
+    link.textContent = 'Cursor';
     link.title = threadContext.length > 0
-      ? `Open this tweet with ${threadContext.length} parent tweet(s) in Cursor`
-      : 'Open this tweet in Cursor';
+      ? `Open with ${threadContext.length} parent tweet(s) in Cursor`
+      : 'Open in Cursor';
 
     const container = document.createElement('span');
     container.className = 'cursor-link-container';

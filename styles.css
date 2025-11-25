@@ -1,5 +1,6 @@
 .cursor-link-container {
   display: inline;
+  white-space: nowrap;
 }
 
 .cursor-link-separator {
@@ -12,6 +13,7 @@
   font-size: inherit;
   font-family: inherit;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 
 .cursor-link:hover {
